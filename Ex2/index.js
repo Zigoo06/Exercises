@@ -7,13 +7,12 @@ selectC.addEventListener("change", filterLists);
 var optionsA;
 var optionsB;
 var optionsC;
-const defaultSelect = "Toate";
+const defaultSelection = "Toate";
 
-var textFromFile = readFromFile("./data.txt");
-rows = readElements(textFromFile);
+var rows = getListFromFile("./data.txt");
 filterLists();
 
-function readFromFile(file) {
+function getListFromFile(file) {
   //try to replace with fetch
   var allText = null;
   var rawFile = new XMLHttpRequest();
@@ -26,11 +25,11 @@ function readFromFile(file) {
     }
   };
   rawFile.send(null);
-
-  return allText;
+  var arrayOfRows = splitTextIntoArrays(allText);
+  return arrayOfRows;
 }
 
-function readElements(text) {
+function splitTextIntoArrays(text) {
   var lines = text.split("\r\n");
 
   var arrayOfRows = [];
@@ -42,7 +41,28 @@ function readElements(text) {
   return arrayOfRows;
 }
 
-function generateList(arrayOfData) {
+function filterLists() {
+  var newList;
+  if (selectA.value != defaultSelection) {
+    newList = rows.filter((list) => {
+      return selectA.value === "" || list[0] === selectA.value;
+    });
+  }
+  if (selectB.value != defaultSelection) {
+    newList = rows.filter((list) => {
+      return selectB.value === "" || list[1] === selectB.value;
+    });
+  }
+  if (selectC.value != defaultSelection) {
+    newList = rows.filter((list) => {
+      return selectC.value === "" || list[2] === selectC.value;
+    });
+  }
+  updateSelects(newList);
+  generateLists(newList);
+}
+
+function generateLists(arrayOfData) {
   const list = document.getElementById("data-list");
   list.innerHTML = "";
   arrayOfData.forEach((element) => {
@@ -52,13 +72,22 @@ function generateList(arrayOfData) {
   });
 }
 
-function uptadeOptions(id, list) {
+function updateSelects(elements) {
+  optionsA = [...new Set(elements.map((list) => list[0]))];
+  optionsB = [...new Set(elements.map((list) => list[1]))];
+  optionsC = [...new Set(elements.map((list) => list[2]))];
+  uptadeSelectOptions("selectA", optionsA);
+  uptadeSelectOptions("selectB", optionsB);
+  uptadeSelectOptions("selectC", optionsC);
+}
+
+function uptadeSelectOptions(id, list) {
   var select = document.getElementById(id);
   select.innerHTML = "";
   if (list.length >= 2) {
     const option = document.createElement("option");
-    option.value = defaultSelect;
-    option.textContent = defaultSelect;
+    option.value = defaultSelection;
+    option.textContent = defaultSelection;
     select.appendChild(option);
   }
 
@@ -72,39 +101,9 @@ function uptadeOptions(id, list) {
   select.selectedIndex = "0";
 }
 
-function updateSelects(elements) {
-  optionsA = [...new Set(elements.map((list) => list[0]))];
-  optionsB = [...new Set(elements.map((list) => list[1]))];
-  optionsC = [...new Set(elements.map((list) => list[2]))];
-  uptadeOptions("selectA", optionsA);
-  uptadeOptions("selectB", optionsB);
-  uptadeOptions("selectC", optionsC);
-}
-
-function filterLists() {
-  var newList;
-  if (selectA.value != defaultSelect) {
-    newList = rows.filter((list) => {
-      return selectA.value === "" || list[0] === selectA.value;
-    });
-  }
-  if (selectB.value != defaultSelect) {
-    newList = rows.filter((list) => {
-      return selectB.value === "" || list[1] === selectB.value;
-    });
-  }
-  if (selectC.value != defaultSelect) {
-    newList = rows.filter((list) => {
-      return selectC.value === "" || list[2] === selectC.value;
-    });
-  }
-  updateSelects(newList);
-  generateList(newList);
-}
-
 function resetFilters() {
-  selectA.value = defaultSelect;
-  selectB.value = defaultSelect;
-  selectC.value = defaultSelect;
+  selectA.value = defaultSelection;
+  selectB.value = defaultSelection;
+  selectC.value = defaultSelection;
   filterLists();
 }

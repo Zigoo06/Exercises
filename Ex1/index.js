@@ -2,16 +2,19 @@ const circles = document.querySelectorAll(".circle");
 const squares = document.querySelectorAll(".square");
 
 let draggedCircle = null;
+addEventListeners();
 
-circles.forEach((circle) => {
-  circle.addEventListener("dragstart", dragStart);
-  circle.addEventListener("dragend", dragEnd);
-});
+function addEventListeners() {
+  circles.forEach((circle) => {
+    circle.addEventListener("dragstart", dragStart);
+    circle.addEventListener("dragend", dragEnd);
+  });
 
-squares.forEach((square) => {
-  square.addEventListener("dragover", dragOver);
-  square.addEventListener("drop", drop);
-});
+  squares.forEach((square) => {
+    square.addEventListener("dragover", dragOver);
+    square.addEventListener("drop", drop);
+  });
+}
 
 function dragStart() {
   draggedCircle = this;
