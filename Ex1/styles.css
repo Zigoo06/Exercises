@@ -1,0 +1,23 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.square,
+.circle {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.red {
+  background-color: red;
+}
